@@ -1,0 +1,279 @@
+===============
+bytes literal empty
+===============
+circuit foo(): Bytes<0> {
+    return Bytes[];
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (bytes_type
+        (tsize
+          (nat))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (bytes_literal)))))))))
+
+===============
+bytes literal with values
+===============
+circuit foo(): Bytes<4> {
+    return Bytes[0, 255, 16, 32];
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (bytes_type
+        (tsize
+          (nat))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (bytes_literal
+                  (expr
+                    (term
+                      (lit
+                        (nat))))
+                  (expr
+                    (term
+                      (lit
+                        (nat))))
+                  (expr
+                    (term
+                      (lit
+                        (nat))))
+                  (expr
+                    (term
+                      (lit
+                        (nat)))))))))))))
+
+===============
+slice expression
+===============
+circuit foo(): Vector<4, Uint<8>> {
+    return slice<4>(v, 2);
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (vector_type
+        (tsize
+          (nat))
+        (type
+          (uint_type
+            (tsize
+              (nat))))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (slice_term
+                  (tsize
+                    (nat))
+                  (expr
+                    (term
+                      (id)))
+                  (expr
+                    (term
+                      (lit
+                        (nat)))))))))))))
+
+===============
+hexadecimal literal
+===============
+circuit foo(): Uint<32> {
+    return 0xFF;
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (uint_type
+        (tsize
+          (nat))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (lit
+                  (nat))))))))))
+
+===============
+octal literal
+===============
+circuit foo(): Uint<32> {
+    return 0o755;
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (uint_type
+        (tsize
+          (nat))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (lit
+                  (nat))))))))))
+
+===============
+binary literal
+===============
+circuit foo(): Uint<8> {
+    return 0b10101010;
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (uint_type
+        (tsize
+          (nat))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (lit
+                  (nat))))))))))
+
+===============
+array literal with spread
+===============
+circuit foo(): Vector<5, Uint<32>> {
+    return [0, ...x, 4];
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (vector_type
+        (tsize
+          (nat))
+        (type
+          (uint_type
+            (tsize
+              (nat))))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (array_literal
+                  (expr
+                    (term
+                      (lit
+                        (nat))))
+                  (spread_element
+                    (expr
+                      (term
+                        (id))))
+                  (expr
+                    (term
+                      (lit
+                        (nat)))))))))))))
+
+===============
+assert statement
+===============
+circuit foo(): Bool {
+    assert x != 0 "error";
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (tref
+        (id)))
+    (block
+      (stmt
+        (assert_stmt
+          (expr
+            (comparison_expr
+              (term
+                (id))
+              (not_equals)
+              (term
+                (lit
+                  (nat)))))
+          (str))))))
+
+===============
+single quoted string in opaque type
+===============
+circuit foo(x: Opaque<'test'>): Field {
+    return 0;
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (parg
+      (pattern
+        (id))
+      (type
+        (opaque_type
+          (str))))
+    (type)
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (term
+                (lit
+                  (nat))))))))))
+
+===============
+non-literal index access
+===============
+circuit foo(): Uint<8> {
+    return v[i];
+}
+---
+(source_file
+  (cdefn
+    (function_name)
+    (type
+      (uint_type
+        (tsize
+          (nat))))
+    (block
+      (stmt
+        (return_stmt
+          (expr_seq
+            (expr
+              (index_access_expr
+                (term
+                  (id))
+                (expr
+                  (term
+                    (id)))))))))))
